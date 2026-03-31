@@ -4,215 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Safety System Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --primary: #0984e3;
-            --safe: #00b894;
-            --danger: #d63031;
-            --warning: #fdcb6e;
-            --shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
-
-        [data-theme='dark'] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #f5f6fa;
-            --text-sub: #b2bec3;
-            --shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        * {
-            box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --primary: #4a90e2;
+            --safe: #2ecc71;
+            --danger: #e74c3c;
+            --text: #2d3436;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            transition: all 0.3s ease;
         }
 
         /* SOS Banner */
         #sos-banner {
-            width: 100%;
-            background-color: var(--danger);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-weight: 700;
-            font-size: 1.2rem;
             display: none;
-            animation: pulse-red 1.5s infinite;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: var(--danger);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            animation: blink 1s infinite;
         }
 
-        @keyframes pulse-red {
-            0% { background-color: #d63031; }
-            50% { background-color: #ff7675; }
-            100% { background-color: #d63031; }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         header {
-            width: 100%;
-            max-width: 1200px;
+            background: var(--card);
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
+        .main-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
 
         .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Status Indicator */
-        .status-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin-bottom: 15px;
-            border: 8px solid #eee;
-            transition: all 0.5s ease;
-        }
-
-        .status-safe { border-color: var(--safe); color: var(--safe); }
-        .status-danger { border-color: var(--danger); color: var(--danger); animation: shake 0.5s infinite; }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            20% { transform: translate(-3px, 0px) rotate(-1deg); }
-            40% { transform: translate(3px, 2px) rotate(1deg); }
-            100% { transform: translate(1px, -1px) rotate(0deg); }
-        }
-
-        .location-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-sub);
-            margin-top: 10px;
-        }
-
-        #map-container {
-            width: 100%;
-            height: 250px;
-            background: #e0e0e0;
+            background: var(--card);
+            padding: 30px;
             border-radius: 15px;
-            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .status-indicator {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            font-size: 2.5rem;
+            color: white;
+            transition: 0.5s;
         }
 
-        /* History Table */
-        .history-card {
-            grid-column: 1 / -1;
-            text-align: left;
-            align-items: flex-start;
+        .safe-bg { background: var(--safe); box-shadow: 0 0 20px rgba(46, 204, 113, 0.4); }
+        .danger-bg { background: var(--danger); box-shadow: 0 0 20px rgba(231, 76, 60, 0.4); }
+
+        .location-box {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.1rem;
         }
 
         table {
             width: 100%;
+            margin-top: 20px;
             border-collapse: collapse;
-            margin-top: 15px;
         }
 
-        th { text-align: left; color: var(--text-sub); padding: 10px; border-bottom: 1px solid #ddd; }
-        td { padding: 12px 10px; border-bottom: 1px solid #eee; }
-
-        /* Dark Mode Toggle */
-        .theme-switch {
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            box-shadow: var(--shadow);
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
-        @media (max-width: 600px) {
-            .container { grid-template-columns: 1fr; }
-        }
+        .full-width { grid-column: 1 / -1; }
     </style>
 </head>
 <body>
 
-<div id="sos-banner">🚨 EMERGENCY ALERT ACTIVE</div>
+<div id="sos-banner">🚨 EMERGENCY ALERT ACTIVE 🚨</div>
 
 <header>
-    <h1>Smart Safety <span style="color: var(--primary);">Dashboard</span></h1>
-    <div class="theme-switch" onclick="toggleTheme()">
-        <i id="theme-icon" class="fas fa-moon"></i>
-    </div>
+    <h1 style="margin:0;">Smart Safety <span style="color:var(--primary)">Dashboard</span></h1>
 </header>
 
-<div class="container">
+<div class="main-container">
     <div class="card">
         <h3>System Status</h3>
-        <div id="status-icon" class="status-circle status-safe">
-            <i class="fas fa-shield-alt"></i>
+        <div id="status-icon" class="status-indicator safe-bg">
+            <i class="fas fa-check-shield"></i>
         </div>
-        <h2 id="status-label">SAFE</h2>
-        <p id="timestamp" style="font-size: 0.8rem; color: var(--text-sub);">Last Update: Just now</p>
+        <h2 id="status-text">SAFE</h2>
     </div>
 
     <div class="card">
-        <h3>Live Location</h3>
-        <div class="location-text">
-            <i class="fas fa-map-marker-alt" style="color: var(--danger);"></i> 
-            Lat: <span id="lat">0.00</span>, Lon: <span id="lon">0.00</span>
+        <h3>Current Location</h3>
+        <div class="location-box">
+            Lat: <span id="lat">--</span><br>
+            Lon: <span id="lon">--</span>
         </div>
-        <div id="map-container">
-            <iframe id="map-iframe" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen></iframe>
-        </div>
+        <p id="update-time" style="font-size: 0.8rem; color: #888; margin-top: 15px;">Waiting for data...</p>
     </div>
 
-    <div class="card history-card">
-        <h3>Recent Activity Logs</h3>
+    <div class="card full-width">
+        <h3>Activity History</h3>
         <table>
             <thead>
                 <tr>
                     <th>Time</th>
                     <th>Status</th>
                     <th>Coordinates</th>
-                    <th>SOS</th>
                 </tr>
             </thead>
-            <tbody id="history-body">
+            <tbody id="history-rows">
                 </tbody>
         </table>
     </div>
@@ -220,107 +153,75 @@
 
 <audio id="alert-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" loop></audio>
 
-<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // --- 1. Firebase Configuration ---
-    // REPLACE THIS with your actual Firebase project config
+    // 1. YOUR CONFIG HERE
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-        projectId: "YOUR_PROJECT",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_ID",
-        appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBYTblhh0_3vSeF3swYe0zw-dBKuXwFkh4",
+  authDomain: "smart-safty-database.firebaseapp.com",
+  databaseURL: "https://smart-safty-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "smart-safty-database",
+  storageBucket: "smart-safty-database.firebasestorage.app",
+  messagingSenderId: "480099462137",
+  appId: "1:480099462137:web:7fca3723ef6cc285d22b28"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const database = firebase.database();
 
-    // --- 2. Dashboard Logic ---
-    const statusLabel = document.getElementById('status-label');
+    // 2. UI Elements
+    const statusText = document.getElementById('status-text');
     const statusIcon = document.getElementById('status-icon');
     const sosBanner = document.getElementById('sos-banner');
-    const latSpan = document.getElementById('lat');
-    const lonSpan = document.getElementById('lon');
-    const mapIframe = document.getElementById('map-iframe');
-    const historyBody = document.getElementById('history-body');
     const alertSound = document.getElementById('alert-sound');
 
-    let historyData = [];
-
-    // Listen to Firebase updates
-    db.ref('/').on('value', (snapshot) => {
+    // 3. Listen for Data
+    database.ref('/').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            updateUI(data);
-            addToHistory(data);
+            // Update Coordinates
+            const coords = data.location.split(',');
+            document.getElementById('lat').innerText = coords[0];
+            document.getElementById('lon').innerText = coords[1];
+
+            // Update Status
+            if (data.status === "ALCOHOL DETECTED") {
+                statusText.innerText = "ALCOHOL DETECTED";
+                statusIcon.className = "status-indicator danger-bg";
+                statusIcon.innerHTML = '<i class="fas fa-biohazard"></i>';
+            } else {
+                statusText.innerText = "SAFE";
+                statusIcon.className = "status-indicator safe-bg";
+                statusIcon.innerHTML = '<i class="fas fa-shield-halved"></i>';
+            }
+
+            // Update SOS
+            if (data.sos === "ON") {
+                sosBanner.style.display = 'block';
+                alertSound.play();
+            } else {
+                sosBanner.style.display = 'none';
+                alertSound.pause();
+            }
+
+            document.getElementById('update-time').innerText = "Last update: " + new Date().toLocaleTimeString();
+            
+            // Add to History
+            addHistoryRow(data.status, data.location);
         }
     });
 
-    function updateUI(data) {
-        const { status, location, sos } = data;
-        const [lat, lon] = location.split(',');
-
-        // Update Coordinates
-        latSpan.innerText = lat;
-        lonSpan.innerText = lon;
-        mapIframe.src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-
-        // Update Status
-        if (status === "ALCOHOL DETECTED") {
-            statusLabel.innerText = "ALCOHOL DETECTED";
-            statusLabel.style.color = "var(--danger)";
-            statusIcon.className = "status-circle status-danger";
-            statusIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-        } else {
-            statusLabel.innerText = "SAFE";
-            statusLabel.style.color = "var(--safe)";
-            statusIcon.className = "status-circle status-safe";
-            statusIcon.innerHTML = '<i class="fas fa-shield-alt"></i>';
-        }
-
-        // SOS Toggle
-        if (sos === "ON") {
-            sosBanner.style.display = "block";
-            alertSound.play().catch(e => console.log("Audio requires user interaction first."));
-        } else {
-            sosBanner.style.display = "none";
-            alertSound.pause();
-            alertSound.currentTime = 0;
-        }
-
-        document.getElementById('timestamp').innerText = `Last Update: ${new Date().toLocaleTimeString()}`;
-    }
-
-    function addToHistory(data) {
-        const time = new Date().toLocaleTimeString();
-        const newEntry = `<tr>
-            <td>${time}</td>
-            <td style="color: ${data.status === 'SAFE' ? 'var(--safe)' : 'var(--danger)'}">${data.status}</td>
-            <td>${data.location}</td>
-            <td>${data.sos}</td>
+    function addHistoryRow(status, loc) {
+        const tbody = document.getElementById('history-rows');
+        const row = `<tr>
+            <td>${new Date().toLocaleTimeString()}</td>
+            <td style="color:${status === 'SAFE' ? 'green' : 'red'}">${status}</td>
+            <td>${loc}</td>
         </tr>`;
-        
-        historyData.unshift(newEntry);
-        if (historyData.length > 5) historyData.pop();
-        historyBody.innerHTML = historyData.join('');
-    }
-
-    // --- 3. Utilities ---
-    function toggleTheme() {
-        const body = document.body;
-        const icon = document.getElementById('theme-icon');
-        if (body.getAttribute('data-theme') === 'dark') {
-            body.removeAttribute('data-theme');
-            icon.className = 'fas fa-moon';
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            icon.className = 'fas fa-sun';
-        }
+        tbody.insertAdjacentHTML('afterbegin', row);
+        if (tbody.children.length > 5) tbody.removeChild(tbody.lastChild);
     }
 </script>
 
